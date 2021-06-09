@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  sbd:
+    container_name: sbd
+    build: 
+      context: ./phpmyadmin
+      dockerfile: ./Dockerfile
+    ports:
+      - "3306:3306"
+    environment: 
+      - USUARIO=asir
+      - PASSWD=asir
+      - HOSTNAME=sbd.asir.es
+      - PROYECTO=asir
+    #volumes: 
+     # - ./sbd:/var/lib/mysql
+    networks: 
+      netasir:
+          ipv4_address: 190.180.170.10
+  sweb:
+    container_name: sweb
+    build: 
+      context: ./proyecto
+      dockerfile: ./Dockerfile
+    environment: 
+      - USUARIO=asir
+      - PASSWD=asir
+      - HOSTNAME=sweb.asir.es
+      - PROYECTO=asir
+    volumes:
+      - ./jinx/:/var/www/html
+    networks: 
+      netasir:
+          ipv4_address: 190.180.170.20
+networks: 
+  netasir:
+      ipam: 
+          driver: default
+          config: 
+              - subnet: 190.180.170.0/24
